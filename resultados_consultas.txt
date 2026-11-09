@@ -1,0 +1,489 @@
+
+==== 1.1 INSERT: nuevo cliente (insertOne) ====
+{
+  acknowledged: true,
+  insertedId: 31
+}
+
+==== 1.2 INSERT: varios productos (insertMany) ====
+{
+  '0': 41,
+  '1': 42
+}
+
+==== 1.3 SELECT: 5 clientes de Bogotá (find + proyección + sort + limit) ====
+{
+  nombre: 'Ana Prueba',
+  email: 'ana.prueba31@correo.com',
+  ciudad: 'Bogotá'
+}
+{
+  nombre: 'Carlos Rodríguez',
+  email: 'carlos.rodriguez23@correo.com',
+  ciudad: 'Bogotá'
+}
+{
+  nombre: 'David Hernández',
+  email: 'david.hernandez6@correo.com',
+  ciudad: 'Bogotá'
+}
+{
+  nombre: 'Paula Torres',
+  email: 'paula.torres21@correo.com',
+  ciudad: 'Bogotá'
+}
+{
+  nombre: 'Sebastián Ramírez',
+  email: 'sebastian.ramirez18@correo.com',
+  ciudad: 'Bogotá'
+}
+
+==== 1.4 SELECT: un pedido por _id (findOne) ====
+{
+  _id: 1,
+  cliente_id: 20,
+  fecha: ISODate('2025-05-07T01:19:00.000Z'),
+  estado: 'cancelado',
+  metodo_pago: 'PSE',
+  items: [
+    {
+      producto_id: 5,
+      nombre: 'Audífonos Bluetooth',
+      categoria: 'Tecnología',
+      cantidad: 1,
+      precio_unitario: 178000
+    },
+    {
+      producto_id: 32,
+      nombre: 'Cloud Computing',
+      categoria: 'Libros',
+      cantidad: 1,
+      precio_unitario: 74000
+    },
+    {
+      producto_id: 36,
+      nombre: 'Gorra',
+      categoria: 'Moda',
+      cantidad: 3,
+      precio_unitario: 372000
+    }
+  ],
+  total: 1368000
+}
+
+==== 1.5 UPDATE: bajar 10% el precio de la categoría Libros (updateMany + $mul) ====
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 8,
+  modifiedCount: 8,
+  upsertedCount: 0
+}
+
+==== 1.6 UPDATE: sumar stock y agregar etiqueta (updateOne + $inc + $addToSet) ====
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+==== 1.7 DELETE: eliminar el cliente de prueba (deleteOne) ====
+{
+  acknowledged: true,
+  deletedCount: 1
+}
+
+==== 1.8 DELETE: eliminar los productos de prueba (deleteMany) ====
+{
+  acknowledged: true,
+  deletedCount: 2
+}
+
+==== 2.1 Productos de Tecnología con precio entre 100.000 y 300.000 ($and, $gte, $lte) ====
+{
+  nombre: 'Parlante portátil',
+  precio: 188000
+}
+{
+  nombre: 'Webcam HD',
+  precio: 182000
+}
+{
+  nombre: 'Audífonos Bluetooth',
+  precio: 178000
+}
+{
+  nombre: 'Monitor 24"',
+  precio: 106000
+}
+{
+  nombre: 'Disco SSD 1TB',
+  precio: 103000
+}
+{
+  nombre: 'Portátil',
+  precio: 101000
+}
+
+==== 2.2 Pedidos pagados o enviados con total > 1.000.000 ($or, $in, $gt) ====
+Cantidad: 28
+
+==== 2.3 Clientes en Cali, Medellín o Pereira, activos ($in) ====
+{
+  nombre: 'Andrés Vargas',
+  ciudad: 'Cali'
+}
+{
+  nombre: 'Carolina Hernández',
+  ciudad: 'Cali'
+}
+{
+  nombre: 'Andrés Pérez',
+  ciudad: 'Cali'
+}
+{
+  nombre: 'Mariana Martínez',
+  ciudad: 'Cali'
+}
+{
+  nombre: 'Carolina Díaz',
+  ciudad: 'Medellín'
+}
+
+==== 2.4 Pedidos que contengan un ítem con cantidad >= 3 ($elemMatch) ====
+Cantidad: 96
+
+==== 2.5 Búsqueda por expresión regular: libros que contengan 'datos' ($regex) ====
+{
+  nombre: 'Python para datos',
+  categoria: 'Libros'
+}
+{
+  nombre: 'Bases de datos NoSQL',
+  categoria: 'Libros'
+}
+
+==== 2.6 Valores distintos: ciudades de los clientes (distinct) ====
+[
+  'Barranquilla',
+  'Bogotá',
+  'Bucaramanga',
+  'Cali',
+  'Cartagena',
+  'Medellín',
+  'Pereira'
+]
+
+==== 3.1 JOIN pedidos -> clientes: 5 pedidos con el nombre y ciudad del cliente ====
+{
+  _id: 1,
+  estado: 'cancelado',
+  total: 1368000,
+  cliente: {
+    nombre: 'Laura Díaz',
+    ciudad: 'Cartagena'
+  }
+}
+{
+  _id: 2,
+  estado: 'cancelado',
+  total: 716000,
+  cliente: {
+    nombre: 'Sebastián Ramírez',
+    ciudad: 'Bogotá'
+  }
+}
+{
+  _id: 3,
+  estado: 'pagado',
+  total: 2008000,
+  cliente: {
+    nombre: 'Sebastián López',
+    ciudad: 'Bucaramanga'
+  }
+}
+{
+  _id: 4,
+  estado: 'cancelado',
+  total: 2012000,
+  cliente: {
+    nombre: 'Juan López',
+    ciudad: 'Barranquilla'
+  }
+}
+{
+  _id: 5,
+  estado: 'entregado',
+  total: 1107000,
+  cliente: {
+    nombre: 'Esteban Díaz',
+    ciudad: 'Bucaramanga'
+  }
+}
+
+==== 3.2 JOIN pedidos -> productos (por ítem): detalle de unidades y marca del producto vendido ====
+{
+  _id: 'Gamma',
+  unidades: 244
+}
+{
+  _id: 'Delta',
+  unidades: 241
+}
+{
+  _id: 'Beta',
+  unidades: 218
+}
+{
+  _id: 'Alfa',
+  unidades: 91
+}
+
+==== 3.3 JOIN: clientes con menos pedidos (lookup + $size + sort) ====
+{
+  nombre: 'Andrés Pérez',
+  ciudad: 'Cali',
+  num_pedidos: 2
+}
+{
+  nombre: 'Laura Díaz',
+  ciudad: 'Cartagena',
+  num_pedidos: 2
+}
+{
+  nombre: 'David Rodríguez',
+  ciudad: 'Pereira',
+  num_pedidos: 2
+}
+{
+  nombre: 'Andrea Martínez',
+  ciudad: 'Bucaramanga',
+  num_pedidos: 4
+}
+{
+  nombre: 'David Hernández',
+  ciudad: 'Bogotá',
+  num_pedidos: 4
+}
+
+==== 4.1 CONTAR: pedidos por estado ($group + $sum:1) ====
+{
+  _id: 'pagado',
+  pedidos: 40
+}
+{
+  _id: 'entregado',
+  pedidos: 40
+}
+{
+  _id: 'cancelado',
+  pedidos: 38
+}
+{
+  _id: 'enviado',
+  pedidos: 32
+}
+
+==== 4.2 SUMAR: ventas totales por método de pago (excluye cancelados) ====
+{
+  _id: 'PSE',
+  ventas: 33980000
+}
+{
+  _id: 'nequi',
+  ventas: 26396000
+}
+{
+  _id: 'contraentrega',
+  ventas: 19771000
+}
+{
+  _id: 'tarjeta',
+  ventas: 19748000
+}
+
+==== 4.3 PROMEDIAR: valor promedio, mínimo y máximo de pedido por estado ====
+{
+  _id: 'enviado',
+  minimo: 76000,
+  maximo: 2375000,
+  promedio: 834125
+}
+{
+  _id: 'cancelado',
+  minimo: 88000,
+  maximo: 2951000,
+  promedio: 1081316
+}
+{
+  _id: 'pagado',
+  minimo: 64000,
+  maximo: 2584000,
+  promedio: 1007950
+}
+{
+  _id: 'entregado',
+  minimo: 30000,
+  maximo: 2202000,
+  promedio: 822125
+}
+
+==== 4.4 Top 5 productos más vendidos (unidades e ingresos) ====
+{
+  _id: 'Balón de fútbol',
+  unidades: 36,
+  ingresos: 3780000
+}
+{
+  _id: 'Disco SSD 1TB',
+  unidades: 36,
+  ingresos: 3708000
+}
+{
+  _id: 'Python para datos',
+  unidades: 27,
+  ingresos: 10746000
+}
+{
+  _id: 'Cafetera',
+  unidades: 24,
+  ingresos: 2040000
+}
+{
+  _id: 'Chaqueta',
+  unidades: 24,
+  ingresos: 3888000
+}
+
+==== 4.5 Ventas por mes de 2025 ($month) ====
+{
+  _id: 1,
+  pedidos: 3,
+  ventas: 3539000
+}
+{
+  _id: 2,
+  pedidos: 8,
+  ventas: 7990000
+}
+{
+  _id: 3,
+  pedidos: 8,
+  ventas: 9541000
+}
+{
+  _id: 4,
+  pedidos: 10,
+  ventas: 6645000
+}
+{
+  _id: 5,
+  pedidos: 9,
+  ventas: 5382000
+}
+{
+  _id: 6,
+  pedidos: 13,
+  ventas: 10800000
+}
+{
+  _id: 7,
+  pedidos: 8,
+  ventas: 8058000
+}
+{
+  _id: 8,
+  pedidos: 6,
+  ventas: 6735000
+}
+{
+  _id: 9,
+  pedidos: 15,
+  ventas: 14412000
+}
+{
+  _id: 10,
+  pedidos: 6,
+  ventas: 3772000
+}
+{
+  _id: 11,
+  pedidos: 8,
+  ventas: 8246000
+}
+{
+  _id: 12,
+  pedidos: 18,
+  ventas: 14775000
+}
+
+==== 4.6 Top 5 clientes por gasto total (join + group) ====
+{
+  gasto: 7636000,
+  pedidos: 6,
+  cliente: 'Sebastián Ramírez',
+  ciudad: 'Bogotá'
+}
+{
+  gasto: 7223000,
+  pedidos: 5,
+  cliente: 'Andrés Torres',
+  ciudad: 'Bucaramanga'
+}
+{
+  gasto: 6834000,
+  pedidos: 6,
+  cliente: 'Miguel Pérez',
+  ciudad: 'Barranquilla'
+}
+{
+  gasto: 6150000,
+  pedidos: 5,
+  cliente: 'Carlos Rodríguez',
+  ciudad: 'Bogotá'
+}
+{
+  gasto: 6100000,
+  pedidos: 5,
+  cliente: 'Sebastián López',
+  ciudad: 'Bucaramanga'
+}
+
+==== 4.7 Precio promedio y stock total por categoría de producto ====
+{
+  _id: 'Deportes',
+  productos: 8,
+  stock_total: 500,
+  precio_prom: 193125
+}
+{
+  _id: 'Libros',
+  productos: 8,
+  stock_total: 438,
+  precio_prom: 188325
+}
+{
+  _id: 'Moda',
+  productos: 8,
+  stock_total: 632,
+  precio_prom: 186750
+}
+{
+  _id: 'Tecnología',
+  productos: 8,
+  stock_total: 441,
+  precio_prom: 158250
+}
+{
+  _id: 'Hogar',
+  productos: 8,
+  stock_total: 471,
+  precio_prom: 136625
+}
+
+==== 5.1 explain(): la consulta por cliente usa el índice cliente_id_1_fecha_-1 ====
+Etapa ganadora : FETCH -> IXSCAN
+Índice usado   : cliente_id_1_fecha_-1
+Docs examinados: 8 | devueltos: 8
